@@ -42,6 +42,7 @@ CUSTOM_CSS = """
     margin: 0;
     font-size: 1.95rem;
     font-weight: 700;
+    color: #ffffff;
 }
 .hero p {
     margin: 0.45rem 0 0;
