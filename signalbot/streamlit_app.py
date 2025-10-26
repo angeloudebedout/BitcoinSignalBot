@@ -1374,7 +1374,7 @@ with tabs[1]:
     table_cols = [
         col for col in ["close", "rsi", "signal", "signal_strength", "divergence"] if col in df.columns
     ]
-    st.dataframe(df.tail(10)[table_cols].round(3), width="stretch")
+    st.dataframe(df.tail(10)[table_cols].round(3), use_container_width=True)
     st.caption("Most recent 10 signals. Use the download button above to export the entire dataset.")
 
 if backtest_mode:
