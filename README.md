@@ -85,7 +85,6 @@ This project was developed and tested with:
 | matplotlib | 3.9.2 |
 | requests | 2.32.3 |
 | yfinance | 0.2.43 |
-| scikit-learn | 1.5.2 |
 | pytest | 8.3.3 |
 
 ### Quick setup

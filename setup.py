@@ -13,6 +13,5 @@ setup(
         "matplotlib>=3.9.2",
         "requests>=2.32.3",
         "pycoingecko>=3.1.0",
-        "scikit-learn>=1.5.2",
     ],
 )
