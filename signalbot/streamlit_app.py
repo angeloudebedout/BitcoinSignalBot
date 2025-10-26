@@ -16,6 +16,12 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+st.set_page_config(
+    page_title="BTC Signal Bot",
+    page_icon="🧠",
+    layout="wide",
+)
+
 CUSTOM_CSS = """
 <style>
 :root {
@@ -754,15 +760,6 @@ from signalbot.plotting import (
     plot_btc_chart_altair,
     plot_equity_curve,
     plot_equity_curve_altair,
-)
-
-# ==============================
-# 🚀 Streamlit Page Config
-# ==============================
-st.set_page_config(
-    page_title="BTC Signal Bot",
-    page_icon="🧠",
-    layout="wide"
 )
 
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
