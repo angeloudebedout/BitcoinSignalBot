@@ -3,12 +3,18 @@ from __future__ import annotations
 import io
 import json
 import math
+import sys
 import traceback
 import uuid
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
 import streamlit as st
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 CUSTOM_CSS = """
 <style>
@@ -734,7 +740,13 @@ def render_overlay_controls(
 
 # Internal imports
 from streamlit_autorefresh import st_autorefresh
-from signalbot.main import run
+try:
+    from signalbot.main import run
+except ModuleNotFoundError as exc:  # pragma: no cover - configuration dependent
+    raise RuntimeError(
+        "Failed to import `signalbot.main`. Make sure the project root is on PYTHONPATH "
+        "or install the package with `pip install -e .`."
+    ) from exc
 from signalbot.backtest import backtest_signals
 from signalbot.plotting import (
     PLOTLY_AVAILABLE,
