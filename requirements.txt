@@ -1,0 +1,19 @@
+# Core web and data visualization
+streamlit==1.39.0
+streamlit-autorefresh==1.0.1
+plotly==5.24.1
+
+# Data analysis and math
+pandas==2.2.3
+numpy==1.26.4
+matplotlib==3.9.2
+
+# Data sourcing
+requests==2.32.3
+pycoingecko==3.1.0
+
+# Machine learning / stats (optional for extensions)
+scikit-learn==1.5.2
+
+# Testing and utilities
+pytest==8.3.3

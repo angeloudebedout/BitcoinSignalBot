@@ -1,0 +1,17 @@
+README.md
+setup.py
+signalbot/__init__.py
+signalbot/backtest.py
+signalbot/data.py
+signalbot/indicators.py
+signalbot/main.py
+signalbot/plotting.py
+signalbot/strategy.py
+signalbot/streamlit_app.py
+signalbot.egg-info/PKG-INFO
+signalbot.egg-info/SOURCES.txt
+signalbot.egg-info/dependency_links.txt
+signalbot.egg-info/requires.txt
+signalbot.egg-info/top_level.txt
+tests/test_backtest.py
+tests/test_strategy.py

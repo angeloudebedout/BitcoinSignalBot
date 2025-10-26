@@ -1,0 +1,2 @@
+- BUY/STRONG BUY only if EMA Fast > EMA Slow
+- SELL/STRONG SELL only if EMA Fast < EMA Slow
