@@ -454,6 +454,7 @@ def plot_btc_chart(
             showarrow=False,
         )
 
+    fig.update_layout(showlegend=False)
     return fig
 
 
