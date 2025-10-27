@@ -13,5 +13,6 @@ setup(
         "matplotlib>=3.9.2",
         "requests>=2.32.3",
         "pycoingecko>=3.1.0",
+        "openpyxl>=3.1.5",
     ],
 )

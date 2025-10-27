@@ -84,6 +84,7 @@ This project was developed and tested with:
 | numpy | 1.26.4 |
 | matplotlib | 3.9.2 |
 | requests | 2.32.3 |
+| openpyxl | 3.1.5 |
 | yfinance | 0.2.43 |
 | pytest | 8.3.3 |
 
