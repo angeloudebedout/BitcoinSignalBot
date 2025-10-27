@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import io
 import math
 import sys
@@ -723,12 +724,10 @@ def render_overlay_controls(
     *,
     backtest_mode_enabled: bool,
     container: Any = st,
-    expand_label: str = "📊 Overlay Options",
+    expand_label: str | None = "📊 Overlay Options",
     expanded: bool = False,
 ) -> dict[str, bool]:
-    """
-    Render overlay toggles within the provided container and sync them with session state.
-    """
+    """Render overlay toggles within the provided container and sync them with session state."""
     toggle_order = [
         "layer_signals",
         "layer_bbands",
@@ -739,7 +738,16 @@ def render_overlay_controls(
         "layer_backtest_trades",
     ]
     states: dict[str, bool] = {}
-    with container.expander(expand_label, expanded=expanded):
+
+    expander_ctx = (
+        container.expander(expand_label, expanded=expanded)
+        if expand_label is not None
+        else contextlib.nullcontext()
+    )
+
+    with expander_ctx:
+        if expand_label is None:
+            container.markdown("**📈 Chart Overlay Options**")
         container.markdown("<div class='overlay-toggle-container'>", unsafe_allow_html=True)
         columns_func = getattr(container, "columns", st.columns)
         toggle_columns = columns_func(2)
@@ -891,8 +899,7 @@ with st.sidebar:
             layer_definitions,
             backtest_mode_enabled=st.session_state.get("toggle_backtest_mode", False),
             container=st,
-            expand_label="📈 Chart Overlay Options",
-            expanded=True,
+            expand_label=None,
         )
 
         st.divider()
