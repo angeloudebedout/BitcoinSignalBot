@@ -784,10 +784,62 @@ st.markdown('<div id="toast-stack" class="toast-stack"></div>', unsafe_allow_htm
 # ==============================
 st.sidebar.header("⚙️ Settings")
 
-settings_tabs = st.sidebar.tabs(["Strategy", "Chart Layers", "Backtest"])
+settings_tabs = st.sidebar.tabs(["Strategy", "Backtest"])
+
+# Shared overlay metadata
+layer_defaults = {
+    "layer_macd": True,
+    "layer_rsi": True,
+    "layer_signals": False,
+    "layer_bbands": False,
+    "layer_emas": False,
+    "layer_divergence": True,
+    "layer_backtest_trades": False,
+}
+for key, default in layer_defaults.items():
+    st.session_state.setdefault(key, default)
+
+layer_definitions = {
+    "layer_macd": {
+        "label": "MACD Panel",
+        "help": "Plot MACD and signal lines in a dedicated panel to track momentum shifts.",
+        "badge": "MACD",
+    },
+    "layer_rsi": {
+        "label": "RSI Panel",
+        "help": "Display the RSI panel beneath the chart for overbought/oversold confirmation.",
+        "badge": "RSI",
+    },
+    "layer_signals": {
+        "label": "Buy & Sell Markers",
+        "help": "Overlay generated buy/sell markers directly on the price candles.",
+        "badge": "Signals",
+    },
+    "layer_bbands": {
+        "label": "Bollinger Bands",
+        "help": "Add Bollinger Bands around price to visualize volatility envelopes.",
+        "badge": "Bollinger",
+    },
+    "layer_emas": {
+        "label": "EMAs",
+        "help": "Draw fast and slow exponential moving averages to assess trend bias.",
+        "badge": "EMAs",
+    },
+    "layer_divergence": {
+        "label": "Divergence Markers",
+        "help": "Highlight bullish or bearish divergences detected by the strategy.",
+        "badge": "Divergence",
+    },
+    "layer_backtest_trades": {
+        "label": "Backtest Trades",
+        "help": "Reveal simulated trade entries and exits when backtesting is enabled.",
+        "badge": "Backtest",
+    },
+}
 
 # Strategy Settings Tab
 with settings_tabs[0]:
+    st.markdown("## ⚙️ Strategy Settings")
     interval_options = {
         "1m": "1m",
         "5m": "5m",
@@ -857,70 +909,15 @@ with settings_tabs[0]:
         key="setting_refresh_rate",
         help_text="Interval for auto-refreshing the chart when the app stays open.",
     )
-
-# Shared overlay metadata
-layer_defaults = {
-    "layer_macd": True,
-    "layer_rsi": True,
-    "layer_signals": False,
-    "layer_bbands": False,
-    "layer_emas": False,
-    "layer_divergence": True,
-    "layer_backtest_trades": False,
-}
-for key, default in layer_defaults.items():
-    st.session_state.setdefault(key, default)
-
-layer_definitions = {
-    "layer_macd": {
-        "label": "MACD Panel",
-        "help": "Plot MACD and signal lines in a dedicated panel to track momentum shifts.",
-        "badge": "MACD",
-    },
-    "layer_rsi": {
-        "label": "RSI Panel",
-        "help": "Display the RSI panel beneath the chart for overbought/oversold confirmation.",
-        "badge": "RSI",
-    },
-    "layer_signals": {
-        "label": "Buy & Sell Markers",
-        "help": "Overlay generated buy/sell markers directly on the price candles.",
-        "badge": "Signals",
-    },
-    "layer_bbands": {
-        "label": "Bollinger Bands",
-        "help": "Add Bollinger Bands around price to visualize volatility envelopes.",
-        "badge": "Bollinger",
-    },
-    "layer_emas": {
-        "label": "EMAs",
-        "help": "Draw fast and slow exponential moving averages to assess trend bias.",
-        "badge": "EMAs",
-    },
-    "layer_divergence": {
-        "label": "Divergence Markers",
-        "help": "Highlight bullish or bearish divergences detected by the strategy.",
-        "badge": "Divergence",
-    },
-    "layer_backtest_trades": {
-        "label": "Backtest Trades",
-        "help": "Reveal simulated trade entries and exits when backtesting is enabled.",
-        "badge": "Backtest",
-    },
-}
-
-# Chart Layers Tab
-with settings_tabs[1]:
-    st.caption("Toggle overlays via the expander to tailor the view.")
     overlay_states_sidebar = render_overlay_controls(
         layer_definitions,
         backtest_mode_enabled=st.session_state.get("toggle_backtest_mode", False),
         container=st,
-        expand_label="📊 Overlay Options",
+        expand_label="📊 Chart Overlay Options",
     )
 
 # Backtest Tab
-with settings_tabs[2]:
+with settings_tabs[1]:
     st.session_state.setdefault("toggle_backtest_mode", False)
     backtest_mode = st.toggle(
         "🧪 Enable Backtest Mode",
@@ -942,8 +939,8 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("""
 🧠 Use the tabs above to configure the strategy, overlays, and backtest options.
 
-ℹ️ **Chart Layers**  
-Overlay toggles appear in the Chart Layers tab for quick adjustments.
+ℹ️ **Chart Overlays**  
+Expand the overlay options within the Strategy tab to tailor the chart view.
 """)
 
 
