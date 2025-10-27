@@ -825,37 +825,37 @@ with st.sidebar:
 
     layer_definitions = {
         "layer_macd": {
-            "label": "MACD Panel",
+            "label": "📊 MACD Panel",
             "help": "Plot MACD and signal lines in a dedicated panel to track momentum shifts.",
             "badge": "MACD",
         },
         "layer_rsi": {
-            "label": "RSI Panel",
+            "label": "📉 RSI Panel",
             "help": "Display the RSI panel beneath the chart for overbought/oversold confirmation.",
             "badge": "RSI",
         },
         "layer_signals": {
-            "label": "Buy & Sell Markers",
+            "label": "📍 Buy & Sell Markers",
             "help": "Overlay generated buy/sell markers directly on the price candles.",
             "badge": "Signals",
         },
         "layer_bbands": {
-            "label": "Bollinger Bands",
+            "label": "📈 Bollinger Bands",
             "help": "Add Bollinger Bands around price to visualize volatility envelopes.",
             "badge": "Bollinger",
         },
         "layer_emas": {
-            "label": "EMAs",
+            "label": "📏 EMAs",
             "help": "Draw fast and slow exponential moving averages to assess trend bias.",
             "badge": "EMAs",
         },
         "layer_divergence": {
-            "label": "Divergence Markers",
+            "label": "🔀 Divergence Markers",
             "help": "Highlight bullish or bearish divergences detected by the strategy.",
             "badge": "Divergence",
         },
         "layer_backtest_trades": {
-            "label": "Backtest Trades",
+            "label": "🧪 Backtest Trades",
             "help": "Reveal simulated trade entries and exits when backtesting is enabled.",
             "badge": "Backtest",
         },
