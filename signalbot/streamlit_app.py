@@ -21,6 +21,28 @@ st.set_page_config(
     layout="wide",
 )
 
+st.markdown(
+    """
+    <style>
+    .stSlider > div[data-baseweb="slider"] > div {
+        padding-top: 0.5rem;
+        padding-bottom: 1.2rem;
+    }
+    .stCheckbox {
+        margin-bottom: 0.3rem;
+    }
+    .stSelectbox > div {
+        margin-bottom: 1.2rem;
+    }
+    .stExpander {
+        border: 1px solid rgba(250, 250, 250, 0.1);
+        border-radius: 8px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 CUSTOM_CSS = """
 <style>
 :root {
