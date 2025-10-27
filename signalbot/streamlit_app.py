@@ -1307,7 +1307,8 @@ with button_cols[3]:
     st.markdown(copy_button_html, unsafe_allow_html=True)
 
 st.markdown("### 🔎 Raw Preview (TSV)")
-st.code(tsv_preview_snippet, language="text")
+with st.expander("📋 TSV Preview", expanded=False):
+    st.code(tsv_preview_snippet, language="text")
 
 metrics = None
 trades_df = None
