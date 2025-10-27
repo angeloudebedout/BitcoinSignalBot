@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import io
-import json
 import math
 import sys
 import traceback
@@ -1261,6 +1260,7 @@ for engine in ("xlsxwriter", "openpyxl"):
 json_records = df.reset_index().to_json(orient="records", date_format="iso")
 tsv_preview = rounded_preview.to_csv(sep="\t", index=True)
 tsv_preview_snippet = "\n".join(tsv_preview.splitlines()[:10])
+tsv_bytes = tsv_preview.encode("utf-8")
 
 button_cols = st.columns([1, 1, 1, 1])
 with button_cols[0]:
@@ -1299,12 +1299,14 @@ with button_cols[2]:
         help="Download the dataset as newline-free JSON records.",
     )
 with button_cols[3]:
-    copy_button_html = (
-        f'<button class="copy-button" onclick="navigator.clipboard.writeText({json.dumps(tsv_preview)});">'
-        "📋 Copy Preview (TSV)"
-        "</button>"
+    st.download_button(
+        label="🗂 Download TSV Preview",
+        data=tsv_bytes,
+        file_name=f"btc_signals_{selected_interval_label.lower()}_preview.tsv",
+        mime="text/tab-separated-values",
+        use_container_width=True,
+        help="Download the preview subset as a TSV file.",
     )
-    st.markdown(copy_button_html, unsafe_allow_html=True)
 
 st.markdown("### 🔎 Raw Preview (TSV)")
 with st.expander("📋 TSV Preview", expanded=False):
