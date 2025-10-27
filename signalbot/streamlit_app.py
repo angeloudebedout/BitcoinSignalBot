@@ -885,7 +885,12 @@ with st.sidebar:
             "1Y": "1y",
         }
         interval_labels = list(interval_options.keys())
-        default_interval_index = interval_labels.index("1M")
+        st.session_state.setdefault("interval_select", "1M")
+        default_label = st.session_state.get("interval_select", "1M")
+        if default_label not in interval_labels:
+            default_label = "1M"
+            st.session_state["interval_select"] = default_label
+        default_interval_index = interval_labels.index(default_label)
         selected_interval_label = st.selectbox(
             "Chart Interval",
             interval_labels,
