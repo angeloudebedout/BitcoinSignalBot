@@ -201,28 +201,34 @@ def plot_btc_chart(
 
     # Bollinger Bands
     if show_bbands and {"bb_upper", "bb_lower"} <= set(df.columns):
-        fig.add_trace(
-            go.Scatter(
-                x=df.index,
-                y=df["bb_upper"],
-                mode="lines",
-                line=dict(color="#38bdf8", dash="dot"),
-                name="Bollinger Upper",
-            ),
-            row=price_row,
-            col=1,
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=df.index,
-                y=df["bb_lower"],
-                mode="lines",
-                line=dict(color="#38bdf8", dash="dot"),
-                name="Bollinger Lower",
-            ),
-            row=price_row,
-            col=1,
-        )
+        band_df = df[["bb_upper", "bb_lower"]].dropna()
+        if not band_df.empty:
+            fig.add_trace(
+                go.Scatter(
+                    x=band_df.index,
+                    y=band_df["bb_upper"],
+                    mode="lines",
+                    line=dict(color="rgba(59, 130, 246, 0.8)", width=1.2),
+                    name="Bollinger Upper",
+                    hoverinfo="x+y+name",
+                ),
+                row=price_row,
+                col=1,
+            )
+            fig.add_trace(
+                go.Scatter(
+                    x=band_df.index,
+                    y=band_df["bb_lower"],
+                    mode="lines",
+                    line=dict(color="rgba(59, 130, 246, 0.8)", width=1.2),
+                    name="Bollinger Lower",
+                    hoverinfo="x+y+name",
+                    fill="tonexty",
+                    fillcolor="rgba(59, 130, 246, 0.12)",
+                ),
+                row=price_row,
+                col=1,
+            )
 
     # EMAs
     if show_emas and {"ema_fast", "ema_slow"} <= set(df.columns):
