@@ -935,15 +935,17 @@ with st.sidebar:
             key="setting_lookback_days",
             help_text="How many days of BTC history to download before generating signals.",
         )
-        refresh_rate = sidebar_slider_with_input(
-            "Auto-refresh (seconds)",
-            min_value=1,
-            max_value=300,
-            value=5,
-            step=1,
-            key="setting_refresh_rate",
-            help_text="Interval for auto-refreshing the chart when the app stays open.",
-        )
+        refresh_rate = None
+        if selected_interval_label == "1M":
+            refresh_rate = sidebar_slider_with_input(
+                "Auto-refresh (seconds)",
+                min_value=1,
+                max_value=300,
+                value=5,
+                step=1,
+                key="setting_refresh_rate",
+                help_text="Interval for auto-refreshing the chart when the app stays open.",
+            )
 
     # Backtest Tab
     with settings_tabs[1]:
@@ -978,7 +980,8 @@ if "overlay_states_sidebar" in locals():
 # ==============================
 # 🔁 Auto-refresh (only chart)
 # ==============================
-st_autorefresh(interval=refresh_rate * 1000, key="autorefresh")
+if refresh_rate is not None:
+    st_autorefresh(interval=refresh_rate * 1000, key="autorefresh")
 
 # ==============================
 # 💾 Session State
@@ -999,10 +1002,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.caption(
-    f"Charts auto-refresh every {refresh_rate} seconds on the {selected_interval_label} interval. "
-    "Overlays can be switched on or off via the sidebar."
-)
+if refresh_rate is not None:
+    st.caption(
+        f"Charts auto-refresh every {refresh_rate} seconds on the {selected_interval_label} interval. "
+        "Overlays can be switched on or off via the sidebar."
+    )
+else:
+    st.caption(
+        f"Viewing the {selected_interval_label} interval. Manual refresh applies; overlays can be switched on or off via the sidebar."
+    )
 
 if not PLOTLY_AVAILABLE:
     st.info(
