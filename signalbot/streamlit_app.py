@@ -1194,8 +1194,60 @@ preview_columns = [
 ]
 preview_df = df.head(8)[preview_columns] if preview_columns else df.head(8)
 rounded_preview = preview_df.round(3)
-preview_style = (
+
+
+def _style_signal_cell(value: Any) -> str:
+    """Return CSS for signal-style columns."""
+    if pd.isna(value):
+        return ""
+    normalized = str(value).upper()
+    if normalized in {"BULLISH", "STRONG BUY", "BUY"}:
+        return "background-color: #d4edda; color: #155724;"
+    if normalized in {"BEARISH", "STRONG SELL", "SELL"}:
+        return "background-color: #f8d7da; color: #721c24;"
+    if normalized in {"HOLD", "NEUTRAL", "EMA MISMATCH"}:
+        return "background-color: #f1f5f9; color: #475569;"
+    return ""
+
+
+def _style_rsi_cell(value: Any) -> str:
+    if pd.isna(value):
+        return ""
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return ""
+    if numeric < oversold:
+        return "background-color: #d1ecf1; color: #0c5460;"
+    if numeric > overbought:
+        return "background-color: #f8d7da; color: #721c24;"
+    return ""
+
+
+def _highlight_macd_cell(value: Any) -> str:
+    if pd.isna(value):
+        return ""
+    try:
+        numeric = abs(float(value))
+    except (TypeError, ValueError):
+        return ""
+    return "background-color: #fff3cd; color: #856404;" if numeric >= 100 else ""
+
+
+styled_preview = (
     rounded_preview.style.format(precision=3)
+    .applymap(
+        _style_signal_cell,
+        subset=[col for col in ["signal", "signal_strength"] if col in rounded_preview.columns],
+    )
+    .applymap(
+        _style_rsi_cell,
+        subset=[col for col in ["rsi"] if col in rounded_preview.columns],
+    )
+    .applymap(
+        _highlight_macd_cell,
+        subset=[col for col in ["macd"] if col in rounded_preview.columns],
+    )
     .set_table_styles(
         [
             {
@@ -1210,20 +1262,12 @@ preview_style = (
                 ],
             },
             {
-                "selector": "tbody tr:nth-child(odd)",
-                "props": [("background-color", "rgba(15, 23, 42, 0.22)")],
-            },
-            {
-                "selector": "tbody tr:nth-child(even)",
-                "props": [("background-color", "rgba(15, 23, 42, 0.12)")],
+                "selector": "tbody td",
+                "props": [("border", "none"), ("font-size", "0.88rem")],
             },
             {
                 "selector": "tbody tr:hover",
                 "props": [("background-color", "rgba(56, 189, 248, 0.18)")],
-            },
-            {
-                "selector": "tbody td",
-                "props": [("color", "#e2e8f0"), ("border", "none"), ("font-size", "0.88rem")],
             },
         ]
     )
@@ -1234,12 +1278,13 @@ column_config = {
 }
 st.subheader("📊 Signal Output Table")
 st.markdown("Download your trade signals or preview them below.")
-st.dataframe(
-    preview_style,
-    use_container_width=True,
-    height=260,
-    column_config=column_config,
-)
+with st.expander("📈 View styled table", expanded=True):
+    st.dataframe(
+        styled_preview,
+        use_container_width=True,
+        height=260,
+        column_config=column_config,
+    )
 
 csv_bytes = df.to_csv(index=True).encode("utf-8")
 excel_bytes: bytes | None = None
