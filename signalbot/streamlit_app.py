@@ -1233,6 +1233,7 @@ preview_style = (
 column_config = {
     "volume": st.column_config.NumberColumn("Volume", width="medium", format="%0.0f"),
 }
+st.markdown("### 📊 Signal Table")
 st.dataframe(
     preview_style,
     use_container_width=True,
@@ -1244,6 +1245,7 @@ csv_bytes = df.to_csv(index=True).encode("utf-8")
 excel_bytes: bytes | None = None
 excel_engine_used: str | None = None
 excel_error: str | None = None
+st.markdown("### 📤 Export Options")
 for engine in ("xlsxwriter", "openpyxl"):
     buffer = io.BytesIO()
     try:
@@ -1258,6 +1260,7 @@ for engine in ("xlsxwriter", "openpyxl"):
 
 json_records = df.reset_index().to_json(orient="records", date_format="iso")
 tsv_preview = rounded_preview.to_csv(sep="\t", index=True)
+tsv_preview_snippet = "\n".join(tsv_preview.splitlines()[:10])
 
 button_cols = st.columns([1, 1, 1, 1])
 with button_cols[0]:
@@ -1302,6 +1305,9 @@ with button_cols[3]:
         "</button>"
     )
     st.markdown(copy_button_html, unsafe_allow_html=True)
+
+st.markdown("### 🔎 Raw Preview (TSV)")
+st.code(tsv_preview_snippet, language="text")
 
 metrics = None
 trades_df = None
