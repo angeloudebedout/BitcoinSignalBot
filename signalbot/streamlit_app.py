@@ -861,11 +861,11 @@ with settings_tabs[0]:
 # Shared overlay metadata
 layer_defaults = {
     "layer_macd": True,
-    "layer_rsi": False,
+    "layer_rsi": True,
     "layer_signals": False,
     "layer_bbands": False,
     "layer_emas": False,
-    "layer_divergence": False,
+    "layer_divergence": True,
     "layer_backtest_trades": False,
 }
 for key, default in layer_defaults.items():
