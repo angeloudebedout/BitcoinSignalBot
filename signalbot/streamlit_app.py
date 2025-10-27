@@ -853,7 +853,7 @@ with settings_tabs[0]:
         "1Y": "1y",
     }
     interval_labels = list(interval_options.keys())
-    default_interval_index = interval_labels.index("4h")
+    default_interval_index = interval_labels.index("1M")
     selected_interval_label = st.selectbox(
         "Chart Interval",
         interval_labels,
