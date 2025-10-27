@@ -1232,7 +1232,8 @@ preview_style = (
 column_config = {
     "volume": st.column_config.NumberColumn("Volume", width="medium", format="%0.0f"),
 }
-st.markdown("### 📊 Signal Table")
+st.subheader("📊 Signal Output Table")
+st.markdown("Download your trade signals or preview them below.")
 st.dataframe(
     preview_style,
     use_container_width=True,
@@ -1308,7 +1309,7 @@ with button_cols[3]:
         help="Download the preview subset as a TSV file.",
     )
 
-st.markdown("### 🔎 Raw Preview (TSV)")
+st.subheader("📋 Raw TSV Output")
 with st.expander("📋 TSV Preview", expanded=False):
     st.code(tsv_preview_snippet, language="text")
 
