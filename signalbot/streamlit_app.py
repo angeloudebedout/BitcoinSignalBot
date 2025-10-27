@@ -702,6 +702,7 @@ def render_overlay_controls(
     backtest_mode_enabled: bool,
     container: Any = st,
     expand_label: str = "📊 Overlay Options",
+    expanded: bool = False,
 ) -> dict[str, bool]:
     """
     Render overlay toggles within the provided container and sync them with session state.
@@ -716,7 +717,7 @@ def render_overlay_controls(
         "layer_backtest_trades",
     ]
     states: dict[str, bool] = {}
-    with container.expander(expand_label, expanded=False):
+    with container.expander(expand_label, expanded=expanded):
         container.markdown("<div class='overlay-toggle-container'>", unsafe_allow_html=True)
         columns_func = getattr(container, "columns", st.columns)
         toggle_columns = columns_func(2)
@@ -782,166 +783,173 @@ st.markdown('<div id="toast-stack" class="toast-stack"></div>', unsafe_allow_htm
 # ==============================
 # ⚙️ Sidebar Controls
 # ==============================
-st.sidebar.header("⚙️ Settings")
+with st.sidebar:
+    st.header("⚙️ Settings")
 
-settings_tabs = st.sidebar.tabs(["Strategy", "Backtest"])
+    settings_tabs = st.tabs(["Strategy", "Backtest"])
 
-# Shared overlay metadata
-layer_defaults = {
-    "layer_macd": True,
-    "layer_rsi": True,
-    "layer_signals": False,
-    "layer_bbands": False,
-    "layer_emas": False,
-    "layer_divergence": True,
-    "layer_backtest_trades": False,
-}
-for key, default in layer_defaults.items():
-    st.session_state.setdefault(key, default)
-
-layer_definitions = {
-    "layer_macd": {
-        "label": "MACD Panel",
-        "help": "Plot MACD and signal lines in a dedicated panel to track momentum shifts.",
-        "badge": "MACD",
-    },
-    "layer_rsi": {
-        "label": "RSI Panel",
-        "help": "Display the RSI panel beneath the chart for overbought/oversold confirmation.",
-        "badge": "RSI",
-    },
-    "layer_signals": {
-        "label": "Buy & Sell Markers",
-        "help": "Overlay generated buy/sell markers directly on the price candles.",
-        "badge": "Signals",
-    },
-    "layer_bbands": {
-        "label": "Bollinger Bands",
-        "help": "Add Bollinger Bands around price to visualize volatility envelopes.",
-        "badge": "Bollinger",
-    },
-    "layer_emas": {
-        "label": "EMAs",
-        "help": "Draw fast and slow exponential moving averages to assess trend bias.",
-        "badge": "EMAs",
-    },
-    "layer_divergence": {
-        "label": "Divergence Markers",
-        "help": "Highlight bullish or bearish divergences detected by the strategy.",
-        "badge": "Divergence",
-    },
-    "layer_backtest_trades": {
-        "label": "Backtest Trades",
-        "help": "Reveal simulated trade entries and exits when backtesting is enabled.",
-        "badge": "Backtest",
-    },
-}
-
-# Strategy Settings Tab
-with settings_tabs[0]:
-    st.markdown("## ⚙️ Strategy Settings")
-    interval_options = {
-        "1m": "1m",
-        "5m": "5m",
-        "15m": "15m",
-        "30m": "30m",
-        "1h": "1h",
-        "4h": "4h",
-        "1d": "1d",
-        "1W": "1wk",
-        "1M": "1mo",
-        "1Y": "1y",
+    # Shared overlay metadata
+    layer_defaults = {
+        "layer_macd": True,
+        "layer_rsi": True,
+        "layer_signals": False,
+        "layer_bbands": False,
+        "layer_emas": False,
+        "layer_divergence": True,
+        "layer_backtest_trades": False,
     }
-    interval_labels = list(interval_options.keys())
-    default_interval_index = interval_labels.index("1M")
-    selected_interval_label = st.selectbox(
-        "Chart Interval",
-        interval_labels,
-        index=default_interval_index,
-        key="interval_select",
-        help="Controls the BTC timeframe used for the strategy and displayed chart.",
-    )
-    interval = interval_options[selected_interval_label]
-    st.markdown("<div class='sidebar-slider-spacer'></div>", unsafe_allow_html=True)
+    for key, default in layer_defaults.items():
+        st.session_state.setdefault(key, default)
 
-    period = sidebar_slider_with_input(
-        "RSI Period",
-        min_value=5,
-        max_value=50,
-        value=14,
-        step=1,
-        key="setting_rsi_period",
-        help_text="Number of periods used to calculate RSI. Lower values react faster but are noisier.",
-    )
-    oversold = sidebar_slider_with_input(
-        "Oversold Threshold",
-        min_value=10,
-        max_value=50,
-        value=30,
-        step=1,
-        key="setting_oversold",
-        help_text="RSI level considered oversold. Signals below this threshold may highlight potential entries.",
-    )
-    overbought = sidebar_slider_with_input(
-        "Overbought Threshold",
-        min_value=50,
-        max_value=90,
-        value=70,
-        step=1,
-        key="setting_overbought",
-        help_text="RSI level considered overbought. Signals above this threshold may suggest taking profits.",
-    )
-    lookback_days = sidebar_slider_with_input(
-        "Lookback Window (days)",
-        min_value=30,
-        max_value=1825,
-        value=365,
-        step=1,
-        key="setting_lookback_days",
-        help_text="How many days of BTC history to download before generating signals.",
-    )
-    refresh_rate = sidebar_slider_with_input(
-        "Auto-refresh (seconds)",
-        min_value=1,
-        max_value=300,
-        value=5,
-        step=1,
-        key="setting_refresh_rate",
-        help_text="Interval for auto-refreshing the chart when the app stays open.",
-    )
-    overlay_states_sidebar = render_overlay_controls(
-        layer_definitions,
-        backtest_mode_enabled=st.session_state.get("toggle_backtest_mode", False),
-        container=st,
-        expand_label="📊 Chart Overlay Options",
-    )
+    layer_definitions = {
+        "layer_macd": {
+            "label": "MACD Panel",
+            "help": "Plot MACD and signal lines in a dedicated panel to track momentum shifts.",
+            "badge": "MACD",
+        },
+        "layer_rsi": {
+            "label": "RSI Panel",
+            "help": "Display the RSI panel beneath the chart for overbought/oversold confirmation.",
+            "badge": "RSI",
+        },
+        "layer_signals": {
+            "label": "Buy & Sell Markers",
+            "help": "Overlay generated buy/sell markers directly on the price candles.",
+            "badge": "Signals",
+        },
+        "layer_bbands": {
+            "label": "Bollinger Bands",
+            "help": "Add Bollinger Bands around price to visualize volatility envelopes.",
+            "badge": "Bollinger",
+        },
+        "layer_emas": {
+            "label": "EMAs",
+            "help": "Draw fast and slow exponential moving averages to assess trend bias.",
+            "badge": "EMAs",
+        },
+        "layer_divergence": {
+            "label": "Divergence Markers",
+            "help": "Highlight bullish or bearish divergences detected by the strategy.",
+            "badge": "Divergence",
+        },
+        "layer_backtest_trades": {
+            "label": "Backtest Trades",
+            "help": "Reveal simulated trade entries and exits when backtesting is enabled.",
+            "badge": "Backtest",
+        },
+    }
 
-# Backtest Tab
-with settings_tabs[1]:
-    st.session_state.setdefault("toggle_backtest_mode", False)
-    backtest_mode = st.toggle(
-        "🧪 Enable Backtest Mode",
-        key="toggle_backtest_mode",
-        help="Toggle on to simulate historical trades using the current strategy settings.",
+    # Strategy Settings Tab
+    with settings_tabs[0]:
+        st.subheader("📊 Strategy Settings")
+        interval_options = {
+            "1m": "1m",
+            "5m": "5m",
+            "15m": "15m",
+            "30m": "30m",
+            "1h": "1h",
+            "4h": "4h",
+            "1d": "1d",
+            "1W": "1wk",
+            "1M": "1mo",
+            "1Y": "1y",
+        }
+        interval_labels = list(interval_options.keys())
+        default_interval_index = interval_labels.index("1M")
+        selected_interval_label = st.selectbox(
+            "Chart Interval",
+            interval_labels,
+            index=default_interval_index,
+            key="interval_select",
+            help="Controls the BTC timeframe used for the strategy and displayed chart.",
+        )
+        interval = interval_options[selected_interval_label]
+
+        overlay_states_sidebar = render_overlay_controls(
+            layer_definitions,
+            backtest_mode_enabled=st.session_state.get("toggle_backtest_mode", False),
+            container=st,
+            expand_label="📈 Chart Overlay Options",
+            expanded=True,
+        )
+
+        st.divider()
+        st.subheader("🎯 RSI Settings")
+        period = sidebar_slider_with_input(
+            "RSI Period",
+            min_value=5,
+            max_value=50,
+            value=14,
+            step=1,
+            key="setting_rsi_period",
+            help_text="Number of periods used to calculate RSI. Lower values react faster but are noisier.",
+        )
+        oversold = sidebar_slider_with_input(
+            "Oversold Threshold",
+            min_value=10,
+            max_value=50,
+            value=30,
+            step=1,
+            key="setting_oversold",
+            help_text="RSI level considered oversold. Signals below this threshold may highlight potential entries.",
+        )
+        overbought = sidebar_slider_with_input(
+            "Overbought Threshold",
+            min_value=50,
+            max_value=90,
+            value=70,
+            step=1,
+            key="setting_overbought",
+            help_text="RSI level considered overbought. Signals above this threshold may suggest taking profits.",
+        )
+
+        st.subheader("⏱️ Other Settings")
+        lookback_days = sidebar_slider_with_input(
+            "Lookback Window (days)",
+            min_value=30,
+            max_value=1825,
+            value=365,
+            step=1,
+            key="setting_lookback_days",
+            help_text="How many days of BTC history to download before generating signals.",
+        )
+        refresh_rate = sidebar_slider_with_input(
+            "Auto-refresh (seconds)",
+            min_value=1,
+            max_value=300,
+            value=5,
+            step=1,
+            key="setting_refresh_rate",
+            help_text="Interval for auto-refreshing the chart when the app stays open.",
+        )
+
+    # Backtest Tab
+    with settings_tabs[1]:
+        st.session_state.setdefault("toggle_backtest_mode", False)
+        backtest_mode = st.toggle(
+            "🧪 Enable Backtest Mode",
+            key="toggle_backtest_mode",
+            help="Toggle on to simulate historical trades using the current strategy settings.",
+        )
+        st.caption("Backtest trades and overlays become available once enabled.")
+
+    st.markdown("---")
+    st.markdown(
+        """
+        🧠 Use the tabs above to configure the strategy and backtest options.
+
+        ℹ️ **Chart Overlays**  
+        Expand the overlay options within the Strategy tab to tailor the chart view.
+        """
     )
-    st.caption("Backtest trades and overlays become available once enabled.")
 
 if "backtest_mode" not in locals():
     backtest_mode = st.session_state.get("toggle_backtest_mode", False)
 
 # Ensure overlay states reflect most recent sidebar selections
-if 'overlay_states_sidebar' in locals():
+if "overlay_states_sidebar" in locals():
     for key, value in overlay_states_sidebar.items():
         st.session_state[key] = value
-
-st.sidebar.markdown("---")
-
-st.sidebar.markdown("""
-🧠 Use the tabs above to configure the strategy, overlays, and backtest options.
-
-ℹ️ **Chart Overlays**  
-Expand the overlay options within the Strategy tab to tailor the chart view.
-""")
 
 
 
