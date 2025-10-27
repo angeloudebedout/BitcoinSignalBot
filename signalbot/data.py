@@ -67,11 +67,14 @@ def get_btc_ohlc(interval: str = "4h", lookback_days: int = 365) -> pd.DataFrame
     # Convert interval to days for CoinGecko API
     interval_map = {
         "1d": 1,
-        "4h": 1/6,
-        "1h": 1/24,
-        "15m": 1/96,
-        "5m": 1/288,
-        "1m": 1/1440
+        "4h": 1 / 6,
+        "1h": 1 / 24,
+        "15m": 1 / 96,
+        "5m": 1 / 288,
+        "1m": 1 / 1440,
+        "1wk": 7,
+        "1mo": 30,
+        "1y": 365,
     }
     
     norm_interval = interval.lower()
